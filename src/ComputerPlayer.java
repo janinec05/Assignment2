@@ -1,38 +1,37 @@
+import ships.BattleshipType;
+import ships.Ship;
+
 import java.util.Random;
 
-public class ComputerPlayer extends Player { //Similar to HumanPlayer.class
+public class ComputerPlayer extends Player {
+    private Random random;
 
-    private Random random; // Random number generator for making guesses
-
-    /**
-     * Constructs a new ComputerPlayer object with the given name and board.
-     * Initializes the random number generator.
-     *
-     * @param name The name of the computer player.
-     * @param board The game board for the computer player.
-     */
     public ComputerPlayer(String name, Board board) {
-        super();
+        super(name, board); // Call the parent class constructor
+        this.random = new Random();
     }
 
-    /**
-     * Places the computer player's ships on the board.
-     */
     @Override
     public void placeShips() {
-
+        // Automatically place ships on the board (randomly)
+        for (BattleshipType shipType : BattleshipType.values()) {
+            int x = random.nextInt(Board.SIZE);
+            int y = random.nextInt(Board.SIZE);
+            boolean horizontal = random.nextBoolean();
+            Ship ship = shipType.createShip(x, y, horizontal);
+            if (board.placeShip(ship)) {
+                System.out.println(shipType.getName() + " placed at (" + x + ", " + y + ")");
+            } else {
+                System.out.println("Failed to place " + shipType.getName());
+            }
+        }
     }
 
-    /**
-     * Makes a random guess on the board.
-     * If the computer makes a correct guess, it should attempt to guess an adjacent square.
-     *
-     * @return An array containing the x and y coordinates of the guess.
-     */
     @Override
     public int[] makeGuess() {
-        int[] guess= {2,3};
-        //TODO: change placeholder guess coordinates
-        return guess;
+        // Generate random guesses for computer
+        int x = random.nextInt(Board.SIZE);
+        int y = random.nextInt(Board.SIZE);
+        return new int[]{x, y};
     }
 }

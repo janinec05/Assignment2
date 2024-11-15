@@ -1,0 +1,4 @@
+Battleship 0 0 H
+Carrier 5 5 V
+Submarine 3 2 H
+PatrolBoat 7 7 V

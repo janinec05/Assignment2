@@ -1,13 +1,32 @@
-/**
- * Represents a coordinate on a 2D grid.
- */
-public class Coordinate { //holds coordinates
+import java.util.Objects;
 
-    private int x; // x-coordinate
-    private int y; // y-coordinate
+public class Coordinate {
+    private final int x;
+    private final int y;
 
-    // TODO: Add a constructor that initializes the x and y coordinates.
-    // TODO: Add getter methods for the x and y coordinates.
-    // TODO: Override the equals() method.
-    // TODO: Override the toString() method.
+    public Coordinate(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Coordinate that = (Coordinate) obj;
+        return x == that.x && y == that.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
+    }
 }
