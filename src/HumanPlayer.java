@@ -22,9 +22,10 @@ public class HumanPlayer extends Player {
     @Override
     public void placeShips() {
         // Loop through all ship types that need to be placed
+        board.displayBoard();
         while (!remainingShips.isEmpty()) {
             // Display the current board state before each ship placement
-            board.displayBoard();
+//            board.displayBoard();
 
             // Display the remaining ships to place
             System.out.println("Ship Types that still need to be placed: ");
@@ -81,7 +82,7 @@ public class HumanPlayer extends Player {
 
             if (placed) {
                 System.out.println(shipType + " placed successfully!");
-//                board.displayBoard();
+                board.displayBoard();
             } else {
                 System.out.println("Cannot place " + shipType + " at that location. Try again.");
                 remainingShips.add(shipType);  // Re-add ship to remaining list if placement fails

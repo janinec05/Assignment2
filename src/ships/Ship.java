@@ -81,16 +81,16 @@ public abstract class Ship {
      *
      * @return The symbol representing the ship.
      */
-    public char getSymbol() {
+    public String getSymbol() {
         switch (name.toLowerCase()) {
             case "carrier":
-                return 'C';
+                return "C";
             case "battleship":
-                return 'B';
+                return "B";
             case "submarine":
-                return 'S';
+                return "S";
             case "patrolboat":
-                return 'P';
+                return "P";
             default:
                 throw new IllegalArgumentException("Unknown ship type: " + name);
         }
