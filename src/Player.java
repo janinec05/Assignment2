@@ -50,4 +50,6 @@ public abstract class Player {
      * @return An array containing the x and y coordinates of the guess.
      */
     public abstract int[] makeGuess();
+
+    public abstract void displayRadar(Board opponentBoard);
 }

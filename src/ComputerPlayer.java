@@ -12,6 +12,11 @@ public class ComputerPlayer extends Player {
     }
 
     @Override
+    public void displayRadar(Board opponentBoard) {
+        opponentBoard.displayRadar();
+    }
+
+    @Override
     public void placeShips() {
         // Automatically place ships on the board (randomly)
         for (BattleshipType shipType : BattleshipType.values()) {
@@ -32,6 +37,6 @@ public class ComputerPlayer extends Player {
         // Generate random guesses for computer
         int x = random.nextInt(Board.SIZE);
         int y = random.nextInt(Board.SIZE);
-        return new int[]{x, y};
-    }
+        System.out.println("Computer guesses: (" + x + ", " + y + ")");
+        return new int[]{x, y};    }
 }

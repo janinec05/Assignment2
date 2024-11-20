@@ -20,6 +20,12 @@ public class HumanPlayer extends Player {
     }
 
     @Override
+    public void displayRadar(Board opponentBoard) {
+        // Display the radar grid (hit/miss info) of the opponent's board
+        opponentBoard.displayRadar();
+    }
+
+    @Override
     public void placeShips() {
         // Loop through all ship types that need to be placed
         board.displayBoard();
@@ -47,9 +53,9 @@ public class HumanPlayer extends Player {
             remainingShips.remove(shipType);
 
             // Input X and Y coordinates for placing the ship
-            System.out.print("Enter the X coordinate for the " + shipType + ": ");
+            System.out.print("Enter the X coordinate (0-9) for the " + shipType + ": ");
             int x = scanner.nextInt();
-            System.out.print("Enter the Y coordinate for the " + shipType + ": ");
+            System.out.print("Enter the Y coordinate (0-9) for the " + shipType + ": ");
             int y = scanner.nextInt();
             scanner.nextLine();  // Consume the newline character after the integer input
 

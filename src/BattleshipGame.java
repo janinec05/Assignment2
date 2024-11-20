@@ -19,6 +19,10 @@ public class BattleshipGame {
         // Continue the game loop after ships are placed
         boolean gameOver = false;
         while (!gameOver) {
+            // Display the current radar of the opponent's board (Human's radar)
+            System.out.println("Your radar:");
+            player1.displayRadar(compBoard);
+
             // Player 1's turn
             System.out.println("Player 1's turn:");
             int[] guess = player1.makeGuess();
@@ -36,6 +40,10 @@ public class BattleshipGame {
                 break;
             }
 
+            // Display the radar of the player's board (Computer's radar)
+            System.out.println("Computer's radar:");
+            compPlayer.displayRadar(player1Board);
+
             // Computer's turn
             System.out.println("Computer's turn:");
             int[] computerGuess = compPlayer.makeGuess();
@@ -46,7 +54,6 @@ public class BattleshipGame {
                 System.out.println("Computer missed.");
             }
 
-            // Check if Player 1 has sunk all ships
             if (player1Board.allShipsSunk()) {
                 System.out.println("Computer wins!");
                 gameOver = true;
