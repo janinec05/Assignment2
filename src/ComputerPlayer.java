@@ -11,6 +11,8 @@ public class ComputerPlayer extends Player {
         this.random = new Random();
     }
 
+    //add ifHit, will guess differently method
+
     @Override
     public void displayRadar(Board opponentBoard) {
         opponentBoard.displayRadar();

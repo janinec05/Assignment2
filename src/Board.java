@@ -63,6 +63,8 @@ public class Board {
         }
 
         ships.add(ship);
+        System.out.println("Ship placed: " + ship.getSymbol()+". Array list: " + ships.toString());  // Debugging
+
         return true;  // Ship placed successfully
     }
 
@@ -113,32 +115,77 @@ public class Board {
         }
 
         computerShips.add(ship);  // Add to the list of computer ships
+        System.out.println("Ship placed: " + ship.getSymbol()+". Array list: " + computerShips.toString());  // Debugging
         return true;  // Ship placed successfully
     }
 
-    // Method to receive a guess from the player
+    public List<Ship> getShips() {
+        return ships;
+    }
+
+    public boolean checkIfShipSunk(int x, int y) {
+        for (Ship ship : ships) {
+            int startX = ship.getStartX();
+            int startY = ship.getStartY();
+            int size = ship.getSize();
+            boolean horizontal = ship.isHorizontal();
+
+            boolean isSunk = true;
+
+            // Check all positions of the ship
+            for (int i = 0; i < size; i++) {
+                if (horizontal) {
+                    if (!isHit(startX + i, startY)) {
+                        isSunk = false;
+                        break;
+                    }
+                } else {
+                    if (!isHit(startX, startY + i)) {
+                        isSunk = false;
+                        break;
+                    }
+                }
+            }
+
+            if (isSunk) {
+                return true; // Ship is sunk
+            }
+        }
+
+        return false; // No ship was sunk
+    }
+
+
     public boolean receiveGuess(int x, int y) {
         // Ensure the coordinates are within bounds of the grid
+//        System.out.println("Player array list: " + );  // Debugging
+        System.out.println("Computer array list: " + computerShips.toString());  // Debugging
+
         if (x < 0 || x >= SIZE || y < 0 || y >= SIZE) {
             System.out.println("Guess out of bounds!");
             return false;  // Invalid guess
         }
 
         // Check if the cell contains a ship symbol on the computer's ship grid (indicating a hit)
-        if (computerShipGrid[y][x] != null &&
-                (computerShipGrid[y][x].equals("C") ||
-                        computerShipGrid[y][x].equals("S") ||
-                        computerShipGrid[y][x].equals("P") ||
-                        computerShipGrid[y][x].equals("B"))) {
-//            System.out.println("Hit! Ship symbol: " + computerShipGrid[x][y]);
+        if (computerShipGrid[y][x] != null) {
             markHit(x, y);  // Mark the position as a hit
+            String shipSymbol = computerShipGrid[y][x];
+            for (Ship ship : computerShips) {
+                if (ship.getSymbol().equals(shipSymbol)) {
+                    ship.hit();
+                    if (ship.isSunk(ship)) {
+                        System.out.println("You sunk an enemy ship!");
+                    }
+                    break;
+                }
+            }
             return true;
         } else {
-//            System.out.println("Miss.");
             markMiss(x, y);  // Mark the position as a miss
             return false;
         }
     }
+
 
     // Mark a hit on the board
     public void markHit(int x, int y) {
@@ -189,32 +236,35 @@ public class Board {
             System.out.println();  // Move to the next row
         }
     }
+
     // Method to check if all ships are sunk
-    public boolean allShipsSunk() {
-        return false;
-//        for (Ship ship : ships) {
-//            int x = ship.getStartX();
-//            int y = ship.getStartY();
-//            int length = ship.getSize();
-//            boolean horizontal = ship.isHorizontal();
-//
-//            // Check if every part of the ship has been hit
-//            for (int i = 0; i < length; i++) {
-//                if (horizontal) {
-//                    if (!isHit(x + i, y)) {
-//                        return false;
-//                    }
-//                } else {
-//                    if (!isHit(x, y + i)) {
-//                        return false;
-//                    }
-//                }
-//            }
-//        }
-//        return true;  // All ships are sunk
+    public boolean allShipsSunk(List<Ship> shipList) {
+        List<Ship> playerShips = getPlayerShips();
+        for (Ship ship : playerShips) {
+            if (!ship.isSunk(ship)) {
+                return true;
+            }
+        }
+        List<Ship> computerShips = getComputerShips();
+        for (Ship ship : computerShips) {
+            if (!ship.isSunk(ship)) {
+                return true;
+            }
+        }
+        return false; // Game is not over yet
     }
 
-    public void displayBoard() {
+    public List<Ship> getPlayerShips() {
+        return ships; // Assuming `playerShips` is the list of player ships
+    }
+
+    public List<Ship> getComputerShips() {
+        return computerShips; // Assuming `computerShips` is the list of computer ships
+    }
+
+
+    //
+    public void displayBoard () {
         System.out.println("Current Board:");
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
@@ -227,4 +277,4 @@ public class Board {
             System.out.println();  // Move to the next row
         }
     }
-}
+    }

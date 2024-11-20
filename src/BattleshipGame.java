@@ -4,7 +4,7 @@ public class BattleshipGame {
 
     public static void main(String[] args) {
         // Test with the absolute path for reading the configuration file
-        Board compBoard = ConfigFileReader.parseBoard("C:\\Users\\janin\\IdeaProjects\\Assignment2CPSC219\\src\\data\\config.txt");
+        Board compBoard = ConfigFileReader.parseBoard("data\\config.txt");
 
         // Create the computer player with its board
         ComputerPlayer compPlayer = new ComputerPlayer("Computer", compBoard);
@@ -23,44 +23,64 @@ public class BattleshipGame {
         // Continue the game loop after ships are placed
         boolean gameOver = false;
         while (!gameOver) {
-            // Display the current radar of the opponent's board (Player 1's radar)
-            System.out.println("Your radar of the enemy's board so far: ");
-            compPlayer.getBoard().displayRadar();  // Adjusted to display computer's radar
-
-            // Player 1's turn
+            // ** Player 1's Turn **
             System.out.println("Player 1's turn:");
-            int[] guess = player1.makeGuess();
-            boolean hit = compPlayer.getBoard().receiveGuess(guess[0], guess[1]);
-            if (hit) {
-                System.out.println("Hit!");
-            } else {
-                System.out.println("Miss.");
+            boolean playerTurn = true;
+
+            while (playerTurn) {
+                // Display the radar of the computer's known areas
+                System.out.println("Your radar of the enemy's board so far: ");
+                compPlayer.getBoard().displayRadar();
+
+                // Player makes a guess
+                int[] guess = player1.makeGuess();
+                boolean hit = compPlayer.getBoard().receiveGuess(guess[0], guess[1]);
+
+                if (hit) {
+                    System.out.println("Hit!");
+                    if (compPlayer.getBoard().checkIfShipSunk(guess[0], guess[1])) {
+                        System.out.println("You sunk an enemy ship!");
+                    }
+                } else {
+                    System.out.println("Miss.");
+                    playerTurn = false; // End player's turn after a miss
+                }
+
+                if (compPlayer.getBoard().allShipsSunk(compPlayer.getBoard().getComputerShips())) {
+                    System.out.println("Player 1 wins!");
+                    gameOver = true;
+                    break;
+                }
             }
 
-            // Check if the computer has sunk all ships
-            if (compPlayer.getBoard().allShipsSunk()) {
-                System.out.println("Player 1 wins!");
-                gameOver = true;
-                break;
-            }
+            if (gameOver) break;
 
-            // Display the radar of the player's board (Computer's radar)
+            // ** Computer's Turn **
             System.out.println("Computer's radar of your board so far: ");
-            player1Board.displayRadar();  // Adjusted to display player1's radar
+            player1Board.displayRadar();
 
-            // Computer's turn
             System.out.println("Computer's turn:");
-            int[] computerGuess = compPlayer.makeGuess();
-            hit = player1Board.receiveGuess(computerGuess[0], computerGuess[1]);
-            if (hit) {
-                System.out.println("Computer hit your ship!");
-            } else {
-                System.out.println("Computer missed.");
-            }
+            boolean computerTurn = true;
 
-            if (player1Board.allShipsSunk()) {
-                System.out.println("Computer wins!");
-                gameOver = true;
+            while (computerTurn) {
+                int[] computerGuess = compPlayer.makeGuess();
+                boolean hit = player1Board.receiveGuess(computerGuess[0], computerGuess[1]);
+
+                if (hit) {
+                    System.out.println("Computer hit your ship!");
+                    if (player1Board.checkIfShipSunk(computerGuess[0], computerGuess[1])) {
+                        System.out.println("The enemy sunk your ship!");
+                    }
+                } else {
+                    System.out.println("Computer missed.");
+                    computerTurn = false; // End computer's turn after a miss
+                }
+
+                if (player1Board.allShipsSunk(player1Board.getPlayerShips())) {
+                    System.out.println("Computer wins!");
+                    gameOver = true;
+                    break;
+                }
             }
         }
     }

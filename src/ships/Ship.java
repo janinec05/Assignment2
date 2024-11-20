@@ -66,13 +66,20 @@ public abstract class Ship {
     public void hit() {
         hitCount++;
     }
+//
+//    public boolean isSunk() {
+//        if(hitCount >= size) {
+//            return false;
+//        }
+//        return true;
+//    }
 
     /**
      * Checks if the ship is completely sunk.
      *
      * @return true if the ship is sunk, false otherwise.
      */
-    public boolean isSunk() {
+    public boolean isSunk(Ship ship) {
         return hitCount >= size;
     }
 
