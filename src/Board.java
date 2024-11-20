@@ -239,18 +239,18 @@ public class Board {
 
     // Method to check if all ships are sunk
     public boolean allShipsSunk(List<Ship> shipList) {
-        List<Ship> playerShips = getPlayerShips();
-        for (Ship ship : playerShips) {
-            if (!ship.isSunk(ship)) {
-                return true;
-            }
-        }
-        List<Ship> computerShips = getComputerShips();
-        for (Ship ship : computerShips) {
-            if (!ship.isSunk(ship)) {
-                return true;
-            }
-        }
+//        List<Ship> playerShips = getPlayerShips();
+//        for (Ship ship : playerShips) {
+//            if (!ship.isSunk(ship)) {
+//                return true;
+//            }
+//        }
+//        List<Ship> computerShips = getComputerShips();
+//        for (Ship ship : computerShips) {
+//            if (!ship.isSunk(ship)) {
+//                return true;
+//            }
+//        }
         return false; // Game is not over yet
     }
 
