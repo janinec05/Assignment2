@@ -54,8 +54,8 @@ public class Board {
                 }
             }
 
-            x++;
-            y--;
+//            x++;
+//            y--;
 
             // Place the ship vertically
             for (int i = 0; i < length; i++) {

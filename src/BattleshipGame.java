@@ -4,7 +4,7 @@ public class BattleshipGame {
 
     public static void main(String[] args) {
         // Test with the absolute path for reading the configuration file
-        Board compBoard = ConfigFileReader.parseBoard("data/config.txt");
+        Board compBoard = ConfigFileReader.parseBoard("C:\\Users\\janin\\IdeaProjects\\Assignment2CPSC219\\src\\data\\config.txt");
 
         // Create the computer player with its board
         ComputerPlayer compPlayer = new ComputerPlayer("Computer", compBoard);
