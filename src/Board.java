@@ -125,16 +125,16 @@ public class Board {
         }
 
         // Check if the cell contains a ship symbol on the computer's ship grid (indicating a hit)
-        if (computerShipGrid[x][y] != null &&
-                (computerShipGrid[x][y].equals("C") ||
-                        computerShipGrid[x][y].equals("S") ||
-                        computerShipGrid[x][y].equals("P") ||
-                        computerShipGrid[x][y].equals("B"))) {
-            System.out.println("Hit! Ship symbol: " + computerShipGrid[x][y]);
+        if (computerShipGrid[y][x] != null &&
+                (computerShipGrid[y][x].equals("C") ||
+                        computerShipGrid[y][x].equals("S") ||
+                        computerShipGrid[y][x].equals("P") ||
+                        computerShipGrid[y][x].equals("B"))) {
+//            System.out.println("Hit! Ship symbol: " + computerShipGrid[x][y]);
             markHit(x, y);  // Mark the position as a hit
             return true;
         } else {
-            System.out.println("Miss.");
+//            System.out.println("Miss.");
             markMiss(x, y);  // Mark the position as a miss
             return false;
         }
