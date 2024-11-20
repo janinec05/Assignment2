@@ -5,6 +5,7 @@ import java.util.List;
 public class Board {
     public static final int SIZE = 10; // Constant for the board size
     private String[][] grid;  // 2D array to represent the grid with String (for ship symbols)
+    private String[][] computerShipGrid; // Grid that holds only the computer's ship positions
     private List<Ship> ships;  // List to store ships on the board
     private List<Ship> computerShips;  // List for computer ships
     private boolean[][] hits;   // 2D array for hits
@@ -13,6 +14,7 @@ public class Board {
     // Constructor to initialize the board
     public Board() {
         grid = new String[SIZE][SIZE];  // Initialize a 10x10 grid of Strings
+        computerShipGrid = new String[SIZE][SIZE]; // Initialize the computer's ship grid
         ships = new ArrayList<>();  // Initialize the list of ships
         computerShips = new ArrayList<>();
         hits = new boolean[SIZE][SIZE];
@@ -54,9 +56,6 @@ public class Board {
                 }
             }
 
-//            x++;
-//            y--;
-
             // Place the ship vertically
             for (int i = 0; i < length; i++) {
                 grid[x + i][y] = ship.getSymbol();  // Place each part of the ship
@@ -67,39 +66,39 @@ public class Board {
         return true;  // Ship placed successfully
     }
 
-    // Method to place a computer ship
     public boolean placeComputerShip(Ship ship) {
-        int length = ship.getSize();
-        int x = ship.getStartX();
-        int y = ship.getStartY();
-        boolean horizontal = ship.isHorizontal();
+        int length = ship.getSize();  // Get the size of the ship
+        int x = ship.getStartX();     // Get the starting row (x coordinate)
+        int y = ship.getStartY();     // Get the starting column (y coordinate)
+        boolean horizontal = ship.isHorizontal();  // Determine if the ship is placed horizontally
 
-        // Check if the ship fits within the grid
+        // Check if the ship can fit based on its orientation
         if (horizontal) {
-            if (y + length > SIZE+1) {
+            if (y + length > SIZE + 1) {  // Check if the ship fits horizontally
                 return false;  // Ship doesn't fit horizontally
             }
 
-            // Check if space is available
+            // Check if the space is free horizontally
             for (int i = 0; i < length; i++) {
-                if (grid[y][x + i] != null) {
-                    return false;  // Space is already occupied
+                if (grid[y][x + i] != null) {  // Space is already occupied
+                    return false;
                 }
             }
 
             // Place the ship horizontally
             for (int i = 0; i < length; i++) {
-                grid[y][x + i] = ship.getSymbol();
+                grid[y][x + i] = ship.getSymbol();  // Place each part of the ship
+                computerShipGrid[y][x + i] = ship.getSymbol();  // Also mark it in the computer ship grid
             }
         } else {
-            if (x + length > SIZE+1) {
+            if (x + length > SIZE + 1) {  // Check if the ship fits vertically
                 return false;  // Ship doesn't fit vertically
             }
 
-            // Check if space is available vertically
+            // Check if the space is free vertically
             for (int i = 0; i < length; i++) {
-                if (grid[y + i][x] != null) {
-                    return false;  // Space is already occupied
+                if (grid[y][x] != null) {  // Space is already occupied
+                    return false;
                 }
             }
 
@@ -108,7 +107,8 @@ public class Board {
 
             // Place the ship vertically
             for (int i = 0; i < length; i++) {
-                grid[x + i][y] = ship.getSymbol();
+                grid[x + i][y] = ship.getSymbol();  // Place each part of the ship
+                computerShipGrid[x + i][y] = ship.getSymbol();  // Also mark it in the computer ship grid
             }
         }
 
@@ -116,79 +116,28 @@ public class Board {
         return true;  // Ship placed successfully
     }
 
-    // Method to display only the computer's ships
-    public void displayComputerShips() {
-        System.out.println("Computer's Ship Positions:");
-        for (int y = 0; y < SIZE; y++) {
-            for (int x = 0; x < SIZE; x++) {
-                // Only print the computer's ship symbols, no hits or misses
-                if (grid[y][x] != null && !isHit(x, y) && !isMiss(x, y)) {
-                    System.out.print("[" + grid[y][x] + "] ");  // Ship symbol
-                } else {
-                    System.out.print("[ ] ");  // Empty space or hit/miss
-                }
-            }
-            System.out.println();  // Move to the next row
+    // Method to receive a guess from the player
+    public boolean receiveGuess(int x, int y) {
+        // Ensure the coordinates are within bounds of the grid
+        if (x < 0 || x >= SIZE || y < 0 || y >= SIZE) {
+            System.out.println("Guess out of bounds!");
+            return false;  // Invalid guess
         }
-    }
 
-    // Method to display the board with ship placements
-    public void displayBoard() {
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                if (grid[i][j] == null) {
-                    System.out.print("[ ] ");  // Empty space
-                } else {
-                    System.out.print("[" + grid[i][j] + "] ");  // Ship symbol
-                }
-            }
-            System.out.println();  // Move to the next row
+        // Check if the cell contains a ship symbol on the computer's ship grid (indicating a hit)
+        if (computerShipGrid[x][y] != null &&
+                (computerShipGrid[x][y].equals("C") ||
+                        computerShipGrid[x][y].equals("S") ||
+                        computerShipGrid[x][y].equals("P") ||
+                        computerShipGrid[x][y].equals("B"))) {
+            System.out.println("Hit! Ship symbol: " + computerShipGrid[x][y]);
+            markHit(x, y);  // Mark the position as a hit
+            return true;
+        } else {
+            System.out.println("Miss.");
+            markMiss(x, y);  // Mark the position as a miss
+            return false;
         }
-    }
-
-    // Display the board for the radar (hit/miss grid)
-    public void displayRadar() {
-        System.out.println("Radar:");
-        for (int y = 0; y < SIZE; y++) {
-            for (int x = 0; x < SIZE; x++) {
-                if (isHit(x, y)) {
-                    System.out.print("[X] "); // Hit
-                } else if (isMiss(x, y)) {
-                    System.out.print("[O] "); // Miss
-                } else {
-                    if (grid[y][x] == null) {
-                        System.out.print("[ ] ");  // Empty space
-                    } else {
-                        System.out.print("[" + grid[y][x] + "] ");
-                    }
-                }
-            }
-            System.out.println();
-        }
-    }
-
-    // Method to check if all ships are sunk
-    public boolean allShipsSunk() {
-        for (Ship ship : ships) {
-            int x = ship.getStartX();
-            int y = ship.getStartY();
-            int length = ship.getSize();
-            boolean horizontal = ship.isHorizontal();
-
-            // Check if every part of the ship has been hit
-            for (int i = 0; i < length; i++) {
-                if (horizontal) {
-                    if (!isHit(x + i, y)) {
-                        return false;
-                    }
-                } else {
-                    if (!isHit(x, y + i)) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;  // All ships are sunk
     }
 
     // Mark a hit on the board
@@ -209,23 +158,73 @@ public class Board {
         return misses[x][y];
     }
 
-    // Method to check if a guess hits a ship
-    public boolean receiveGuess(int x, int y) {
-        // Ensure that the position hasn't been guessed before
-        if (isHit(x, y) || isMiss(x, y)) {
-            System.out.println("This position has already been guessed!");
-            return false;
+    // Display the board for the radar (hit/miss grid)
+    public void displayRadar() {
+        for (int y = 0; y < SIZE; y++) {
+            for (int x = 0; x < SIZE; x++) {
+                if (isHit(x, y)) {
+                    System.out.print("[X] "); // Hit
+                } else if (isMiss(x, y)) {
+                    System.out.print("[O] "); // Miss
+                } else {
+                    System.out.print("[ ] ");  // Empty space (no ship visible)
+                }
+            }
+            System.out.println();
         }
+    }
 
-        // If the cell contains a ship, mark it as hit
-        if (grid[x][y] != null) {
-            System.out.println("Hit!");
-            markHit(x, y);  // Mark the position as a hit
-            return true;
-        } else {
-            System.out.println("Miss.");
-            markMiss(x, y);  // Mark the position as a miss
-            return false;
+    // Method to display only the computer's ships (without hits/misses)
+    public void displayComputerShips() {
+        System.out.println("Computer's Ship Positions:");
+        for (int y = 0; y < SIZE; y++) {
+            for (int x = 0; x < SIZE; x++) {
+                // Only print the computer's ship symbols if not hit or missed
+                if (grid[y][x] != null && !isHit(x, y) && !isMiss(x, y)) {
+                    System.out.print("[" + grid[y][x] + "] ");  // Ship symbol
+                } else {
+                    System.out.print("[ ] ");  // Empty space or hit/miss
+                }
+            }
+            System.out.println();  // Move to the next row
+        }
+    }
+    // Method to check if all ships are sunk
+    public boolean allShipsSunk() {
+        return false;
+//        for (Ship ship : ships) {
+//            int x = ship.getStartX();
+//            int y = ship.getStartY();
+//            int length = ship.getSize();
+//            boolean horizontal = ship.isHorizontal();
+//
+//            // Check if every part of the ship has been hit
+//            for (int i = 0; i < length; i++) {
+//                if (horizontal) {
+//                    if (!isHit(x + i, y)) {
+//                        return false;
+//                    }
+//                } else {
+//                    if (!isHit(x, y + i)) {
+//                        return false;
+//                    }
+//                }
+//            }
+//        }
+//        return true;  // All ships are sunk
+    }
+
+    public void displayBoard() {
+        System.out.println("Current Board:");
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (grid[i][j] == null) {
+                    System.out.print("[ ] ");  // Empty space
+                } else {
+                    System.out.print("[" + grid[i][j] + "] ");  // Ship symbol
+                }
+            }
+            System.out.println();  // Move to the next row
         }
     }
 }

@@ -23,9 +23,9 @@ public class BattleshipGame {
         // Continue the game loop after ships are placed
         boolean gameOver = false;
         while (!gameOver) {
-            // Display the current radar of the opponent's board (Human's radar)
-            System.out.println("Your radar:");
-            player1.displayRadar(compBoard);
+            // Display the current radar of the opponent's board (Player 1's radar)
+            System.out.println("Your radar of the enemy's board so far: ");
+            compPlayer.getBoard().displayRadar();  // Adjusted to display computer's radar
 
             // Player 1's turn
             System.out.println("Player 1's turn:");
@@ -45,8 +45,8 @@ public class BattleshipGame {
             }
 
             // Display the radar of the player's board (Computer's radar)
-            System.out.println("Computer's radar:");
-            compPlayer.displayRadar(player1Board);
+            System.out.println("Computer's radar of your board so far: ");
+            player1Board.displayRadar();  // Adjusted to display player1's radar
 
             // Computer's turn
             System.out.println("Computer's turn:");
