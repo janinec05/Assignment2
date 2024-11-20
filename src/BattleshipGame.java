@@ -16,6 +16,10 @@ public class BattleshipGame {
         // Prompt the player to place ships
         player1.placeShips();
 
+        // Display the computer's ships (before the game starts)
+        System.out.println("Computer's ships' positions:");
+        compPlayer.getBoard().displayComputerShips();
+
         // Continue the game loop after ships are placed
         boolean gameOver = false;
         while (!gameOver) {
