@@ -34,6 +34,10 @@ public class Board {
         int y = ship.getStartY();     // Get the starting column (y coordinate)
         boolean horizontal = ship.isHorizontal();  // Determine if the ship is placed horizontally
 
+        if (x < 0 || x >= SIZE || y < 0 || y >= SIZE) {
+            return false;
+        }
+
         // Check if the ship can fit based on its orientation
         if (horizontal) {
             if (y + length > SIZE+1) {  // Check if the ship fits horizontally
